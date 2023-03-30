@@ -1,0 +1,23 @@
+const fs = require('fs');
+const { Octokit } = require('@octokit/rest');
+
+// Generate a token to access the GitHub API
+const octokit = new Octokit({
+  auth: 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
+});
+
+//read the file you want to upload to GitHub
+const fileContents = fs.readFileSync('path/to/file.txt');
+
+// create a commit
+octokit.repos.createOrUpdateFileContents({
+  owner: 'YOUR_GITHUB_USERNAME',
+  repo: 'YOUR_REPO_NAME',
+  path: 'path/to/file.txt',
+  message: 'Add file.txt',
+  content: fileContents.toString('base64'),
+}).then(response => {
+  console.log('File uploaded to GitHub!');
+}).catch(error => {
+  console.error('Error uploading file:', error);
+});
